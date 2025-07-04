@@ -1,6 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// This is where you will put your Gemini API key as an environment variable
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.handler = async function(event, context) {
@@ -18,7 +17,8 @@ exports.handler = async function(event, context) {
             };
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+        // *** HNA FIN KAYN L'TAGHYIR L'MOHIM ***
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest"});
 
         const masterPrompt = `
         Act as an expert media buying strategist for the "Media Buying Academy" community.
