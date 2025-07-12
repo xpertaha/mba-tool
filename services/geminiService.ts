@@ -1,18 +1,21 @@
+// Import the necessary library
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-import { GoogleGenAI } from "@google/genai";
+// ##################################################################
+// ##                                                              ##
+// ##     7ET L'API KEY L'HAQIQI DYALEK HNA BIN " "                  ##
+// ##     (حط المفتاح السري ديالك هنا مباشرة)                            ##
+// ##                                                              ##
+// ##################################################################
+const API_KEY = "AIzaSyBbP_KBN-ZckhWcNB3RTNpKWBeGQ-0CwPM";
 
-// The API key MUST be set in the environment variables.
-// The platform should handle injecting `process.env.API_KEY`.
-if (!process.env.API_KEY) {
-    // This provides a clear error message in the developer console
-    // if the API key is not configured, aiding in debugging.
-    console.error("API_KEY environment variable not set. Please configure it in your environment.");
-}
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+// Initialize the Gemini AI client with your hardcoded API key
+const ai = new GoogleGenerativeAI(API_KEY);
 
 export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string): Promise<string> => {
     
+    // The master prompt that instructs the AI
     const masterPrompt = `
     Act as an expert media buying strategist for the "Media Buying Academy" community.
     Your task is to create a comprehensive 5-stage marketing funnel strategy (Awareness, Engagement, Consideration, Conversion, Retention) based on the following ad description.
@@ -28,16 +31,21 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     `;
 
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-pro',
-            contents: masterPrompt,
-        });
+        // Get the specific model we want to use
+        const model = ai.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+        
+        // Generate the content
+        const result = await model.generateContent(masterPrompt);
+        const response = await result.response;
+        const text = response.text();
 
-        return response.text;
+        return text;
+
     } catch (error) {
         console.error("Error generating strategy with Gemini:", error);
-        if (error instanceof Error) {
-            throw new Error(error.message);
+        // This will create a more specific error message for the user
+        if (error instanceof Error && error.message.includes('API key not valid')) {
+             throw new Error("حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك.");
         }
         throw new Error("An unknown error occurred while generating the strategy.");
     }
