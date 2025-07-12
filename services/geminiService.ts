@@ -1,10 +1,15 @@
-import { GoogleGenerativeAI } from "@google/genai";
 
-// تم وضع المفتاح السري مباشرة هنا لغرض التجربة فقط
-const API_KEY = "AIzaSyBbP_KBN-ZckhWcNB3RTNpKWBeGQ-0CwPM";
+import { GoogleGenAI } from "@google/genai";
 
-// Initialize the Gemini AI client with your hardcoded API key
-const ai = new GoogleGenerativeAI(API_KEY);
+// The API key MUST be set in the environment variables.
+// The platform should handle injecting `process.env.API_KEY`.
+if (!process.env.API_KEY) {
+    // This provides a clear error message in the developer console
+    // if the API key is not configured, aiding in debugging.
+    console.error("API_KEY environment variable not set. Please configure it in your environment.");
+}
+
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
 export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string): Promise<string> => {
     
@@ -23,21 +28,16 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     `;
 
     try {
-        // Get the specific model we want to use
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
-        
-        // Generate the content
-        const result = await model.generateContent(masterPrompt);
-        const response = await result.response;
-        const text = response.text();
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-pro',
+            contents: masterPrompt,
+        });
 
-        return text;
-
+        return response.text;
     } catch (error) {
         console.error("Error generating strategy with Gemini:", error);
         if (error instanceof Error) {
-            // Provide a more user-friendly error message
-             throw new Error("حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك وأن حساب الفوترة مفعل.");
+            throw new Error(error.message);
         }
         throw new Error("An unknown error occurred while generating the strategy.");
     }
