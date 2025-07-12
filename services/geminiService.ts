@@ -1,21 +1,13 @@
-// Import the necessary library
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/genai";
 
-// ##################################################################
-// ##                                                              ##
-// ##     7ET L'API KEY L'HAQIQI DYALEK HNA BIN " "                  ##
-// ##     (حط المفتاح السري ديالك هنا مباشرة)                            ##
-// ##                                                              ##
-// ##################################################################
+// تم وضع المفتاح السري مباشرة هنا لغرض التجربة فقط
 const API_KEY = "AIzaSyBbP_KBN-ZckhWcNB3RTNpKWBeGQ-0CwPM";
-
 
 // Initialize the Gemini AI client with your hardcoded API key
 const ai = new GoogleGenerativeAI(API_KEY);
 
 export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string): Promise<string> => {
     
-    // The master prompt that instructs the AI
     const masterPrompt = `
     Act as an expert media buying strategist for the "Media Buying Academy" community.
     Your task is to create a comprehensive 5-stage marketing funnel strategy (Awareness, Engagement, Consideration, Conversion, Retention) based on the following ad description.
@@ -43,9 +35,9 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
 
     } catch (error) {
         console.error("Error generating strategy with Gemini:", error);
-        // This will create a more specific error message for the user
-        if (error instanceof Error && error.message.includes('API key not valid')) {
-             throw new Error("حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك.");
+        if (error instanceof Error) {
+            // Provide a more user-friendly error message
+             throw new Error("حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك وأن حساب الفوترة مفعل.");
         }
         throw new Error("An unknown error occurred while generating the strategy.");
     }
