@@ -1,8 +1,0 @@
-{
-  "name": "mba-tool",
-  "version": "1.0.0",
-  "description": "Ad Strategy Generator",
-  "dependencies": {
-    "@google/generative-ai": "^0.1.3"
-  }
-}
