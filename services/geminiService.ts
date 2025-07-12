@@ -1,13 +1,15 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// This is the correct way to get the API key in a Vite/React project
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+import { GoogleGenAI } from "@google/genai";
 
-if (!API_KEY) {
-    console.error("VITE_GEMINI_API_KEY environment variable not set.");
+// The API key MUST be set in the environment variables.
+// The platform should handle injecting `process.env.API_KEY`.
+if (!process.env.API_KEY) {
+    // This provides a clear error message in the developer console
+    // if the API key is not configured, aiding in debugging.
+    console.error("API_KEY environment variable not set. Please configure it in your environment.");
 }
 
-const genAI = new GoogleGenerativeAI(API_KEY || "");
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
 export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string): Promise<string> => {
     
@@ -26,18 +28,16 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     `;
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
-        
-        const result = await model.generateContent(masterPrompt);
-        const response = await result.response;
-        const text = response.text();
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-pro',
+            contents: masterPrompt,
+        });
 
-        return text;
-
+        return response.text;
     } catch (error) {
         console.error("Error generating strategy with Gemini:", error);
         if (error instanceof Error) {
-             throw new Error("حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك وأن حساب الفوترة مفعل.");
+            throw new Error(error.message);
         }
         throw new Error("An unknown error occurred while generating the strategy.");
     }
