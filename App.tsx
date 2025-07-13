@@ -4,18 +4,21 @@ import { FormData } from './types';
 import { generateStrategy } from './services/geminiService';
 import Loader from './components/Loader';
 import MarkdownDisplay from './components/MarkdownDisplay';
+import FrameworkHelpModal from './components/FrameworkHelpModal';
 
 const App: React.FC = () => {
     const [formData, setFormData] = useState<FormData>({
         productDesc: '',
         targetAudience: '',
-        mainMessage: ''
+        mainMessage: '',
+        copywritingFramework: ''
     });
     const [strategy, setStrategy] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
     };
@@ -33,7 +36,7 @@ const App: React.FC = () => {
         setStrategy('');
 
         try {
-            const result = await generateStrategy(formData.productDesc, formData.targetAudience, formData.mainMessage);
+            const result = await generateStrategy(formData.productDesc, formData.targetAudience, formData.mainMessage, formData.copywritingFramework);
             setStrategy(result);
         } catch (err) {
             if (err instanceof Error) {
@@ -91,6 +94,33 @@ const App: React.FC = () => {
                                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200 placeholder-gray-500"
                             />
                         </div>
+                         <div className="form-group">
+                            <div className="flex items-center gap-x-2 mb-2">
+                                <label htmlFor="copywritingFramework" className="font-bold text-gray-300">4. اختر إطار عمل الكتابة (اختياري)</label>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsHelpModalOpen(true)}
+                                    className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                                    aria-label="مساعدة في اختيار إطار العمل"
+                                >
+                                    (مساعدة؟)
+                                </button>
+                            </div>
+                            <select
+                                id="copywritingFramework"
+                                value={formData.copywritingFramework}
+                                onChange={handleInputChange}
+                                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200"
+                            >
+                                <option value="">بدون إطار محدد</option>
+                                <option value="AIDA">AIDA (Attention, Interest, Desire, Action)</option>
+                                <option value="PAS">PAS (Problem, Agitate, Solve)</option>
+                                <option value="Before-After-Bridge">Before-After-Bridge</option>
+                                <option value="FAB">FAB (Features, Advantages, Benefits)</option>
+                                <option value="4U's">4U's (Useful, Urgent, Unique, Ultra-specific)</option>
+                                <option value="SLAP">SLAP (Stop, Look, Act, Purchase)</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button type="submit" disabled={isLoading} className="w-full mt-8 py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 disabled:bg-gray-500 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2 text-lg">
@@ -120,8 +150,10 @@ const App: React.FC = () => {
                 </section>
             </main>
             <footer className="text-center mt-6 text-gray-500 text-sm">
-                <p>تم التطوير من طرف xpertaha  لـ MBA Community.</p>
+                <p>تم التطوير بمساعدة Gemini لـ MBA Community.</p>
             </footer>
+            
+            <FrameworkHelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
         </div>
     );
 };
