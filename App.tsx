@@ -150,7 +150,7 @@ const App: React.FC = () => {
                 </section>
             </main>
             <footer className="text-center mt-6 text-gray-500 text-sm">
-                <p>تم التطوير بمساعدة Gemini لـ MBA Community.</p>
+                <p>تم التطوير  XperTaha لـ MBA Community.</p>
             </footer>
             
             <FrameworkHelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
