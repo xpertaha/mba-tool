@@ -1,5 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import i18n from 'https://esm.sh/i18next@^23.13.0';
+import { initReactI18next } from 'https://esm.sh/react-i18next@^15.0.0';
 
 const resources = {
   en: {
