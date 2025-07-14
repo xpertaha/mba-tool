@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo } from 'https://esm.sh/react@19.1.0';
 
 // Declare `marked` to inform TypeScript that it's available globally from the CDN script.
 declare const marked: {
