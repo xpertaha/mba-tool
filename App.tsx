@@ -103,7 +103,7 @@ const App: React.FC = () => {
                                     className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
                                     aria-label="مساعدة في اختيار إطار العمل"
                                 >
-                                    (مساعدة؟)
+                                    اعرف المزيد
                                 </button>
                             </div>
                             <select
