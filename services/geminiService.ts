@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 // The API key MUST be set in the environment variables.
@@ -68,14 +67,14 @@ const getFrameworkInstructions = (framework: string): string => {
     return instructions[framework] || '';
 };
 
-export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string, copywritingFramework: string): Promise<string> => {
+export const generateStrategy = async (productDesc: string, targetAudience: string, mainMessage: string, copywritingFramework: string, outputLanguage: string): Promise<string> => {
     
     const frameworkInstructions = getFrameworkInstructions(copywritingFramework);
     
     const masterPrompt = `
     As an expert media buying strategist from the "Media Buying Academy," your mission is to create a powerful, highly effective 5-stage marketing funnel strategy (Awareness, Engagement, Consideration, Conversion, Retention).
 
-    The final output MUST be a single, clean Markdown table in professional Arabic, and nothing else.
+    The final output MUST be a single, clean Markdown table, and nothing else.
     The table columns are: "المرحلة", "Cible (الجمهور المستهدف)", "Objectif (الهدف)", "Stratégie (الاستراتيجية)", "Format choisi (الشكل المختار)", "Texte dans la photo (النص في الصورة)", "Message CTA (رسالة الحث)", "Canal (القناة)".
 
     ---
@@ -123,6 +122,9 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     - Product/Service: ${productDesc}
     - Target Audience: ${targetAudience}
     - Main Message: ${mainMessage}
+
+    ---
+    IMPORTANT: The final output for the entire Markdown table must be generated exclusively in the following language: ${outputLanguage}. This includes translating the table headers into the target language. The original language of this prompt is irrelevant for the final output language.
     `;
 
     try {
