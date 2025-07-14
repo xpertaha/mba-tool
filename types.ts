@@ -3,4 +3,5 @@ export interface FormData {
   targetAudience: string;
   mainMessage: string;
   copywritingFramework: string;
+  outputLanguage: string;
 }
