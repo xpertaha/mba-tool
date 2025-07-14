@@ -185,14 +185,17 @@ const resources = {
 };
 
 i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'ar', // default language
-    fallbackLng: 'ar',
-    interpolation: {
-      escapeValue: false, 
-    },
+  .use(initReactI18next); // we only pass the module here
+
+// We check if it's already initialized to avoid re-initializing on hot reloads
+if (!i18n.isInitialized) {
+    i18n.init({
+        resources,
+        lng: 'ar', // default language
+        fallbackLng: 'ar',
+        interpolation: {
+            escapeValue: false, 
+        },
     detection: {
       order: ['htmlTag'],
       caches: [],
