@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'https://esm.sh/react-i18next@^15.0.0';
 import { FormData } from './types';
 import { generateStrategy } from './services/geminiService';
 import Loader from './components/Loader';
