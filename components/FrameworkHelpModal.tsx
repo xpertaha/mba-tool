@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const TargetIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block ml-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -13,45 +14,16 @@ const LightbulbIcon: React.FC = () => (
     </svg>
 );
 
-const frameworkData = [
-  {
-    title: "AIDA",
-    tagline: "جذب الانتباه ثم بناء الرغبة تدريجياً. هو المسار الكلاسيكي لإقناع العميل خطوة بخطوة.",
-    useCase: "أغلب المنتجات والخدمات. مثالي لحملات تبدأ من الصفر مع جمهور جديد.",
-    example: "إطلاق علامة تجارية جديدة للملابس، تسويق لشقة..."
-  },
-  {
-    title: "PAS",
-    tagline: "عرض المشكلة، تم تضخيمها، ثم تقديم الحل. إطار عاطفي جداً يركز على 'الألم'.",
-    useCase: "الخدمات التي تحل مشاكل واضحة ومؤلمة.",
-    example: "خدمة استشارة نفسية، منتج لعلاج حب الشباب، برنامج للتخلص من الديون."
-  },
-  {
-    title: "Before-After-Bridge",
-    tagline: "تصوير الحالة قبل وبعد، وتقديم المنتج كجسر بينهما. يركز على قصة التحول.",
-    useCase: "المنتجات والخدمات التي تغير حياة أو عادات الشخص.",
-    example: "برنامج رياضي لإنقاص الوزن، دورات تكوينية لتغيير المسار المهني."
-  },
-  {
-    title: "FAB",
-    tagline: "إظهار المميزات، والفوائد العملية، ثم المنافع الحقيقية. إطار منطقي وعقلاني.",
-    useCase: "المنتجات التقنية أو المعقدة، وخدمات SaaS و B2B.",
-    example: "هاتف ذكي جديد، برنامج كمبيوتر، سيارة."
-  },
-  {
-    title: "4U's / SLAP",
-    tagline: "أطر عمل سريعة ومباشرة لجذب الانتباه الفوري في المحتوى السريع.",
-    useCase: "العناوين، إعلانات الفيديو القصيرة (Reels/TikTok)، والمحتوى الفيروسي.",
-    example: "إعلان عن تخفيضات سريعة (Flash Sale)، فيديو قصير يعرض خاصية مثيرة."
-  }
-];
-
 interface FrameworkHelpModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
 const FrameworkHelpModal: React.FC<FrameworkHelpModalProps> = ({ isOpen, onClose }) => {
+    const { t } = useTranslation();
+    
+    const frameworkKeys = ["aida", "pas", "beforeAfterBridge", "fab", "uslap"];
+
     if (!isOpen) {
         return null;
     }
@@ -70,7 +42,7 @@ const FrameworkHelpModal: React.FC<FrameworkHelpModalProps> = ({ isOpen, onClose
                 <button 
                     onClick={onClose}
                     className="absolute top-4 left-4 text-gray-500 hover:text-white transition-colors"
-                    aria-label="Close"
+                    aria-label={t('modalClose')}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -78,23 +50,23 @@ const FrameworkHelpModal: React.FC<FrameworkHelpModalProps> = ({ isOpen, onClose
                 </button>
 
                 <header className="text-center mb-6">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-blue-400">دليل سريع لاختيار إطار عمل كتابة الإعلانات المناسب</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-blue-400">{t('modalTitle')}</h2>
                 </header>
 
                 <div className="space-y-4">
-                    {frameworkData.map((framework) => (
-                        <div key={framework.title} className="bg-gray-700/50 border border-gray-600 rounded-lg p-4 transition-transform hover:scale-[1.02] hover:border-blue-500/50">
-                            <h3 className="text-xl font-bold text-blue-300 mb-2">{framework.title}</h3>
-                            <p className="text-gray-300 italic mb-4">"{framework.tagline}"</p>
+                    {frameworkKeys.map((key) => (
+                        <div key={key} className="bg-gray-700/50 border border-gray-600 rounded-lg p-4 transition-transform hover:scale-[1.02] hover:border-blue-500/50">
+                            <h3 className="text-xl font-bold text-blue-300 mb-2">{t(`frameworks.${key}.title`)}</h3>
+                            <p className="text-gray-300 italic mb-4">"{t(`frameworks.${key}.tagline`)}"</p>
                             
                             <div className="border-t border-gray-600 pt-3">
-                                <h4 className="font-bold mb-2 flex items-center"><TargetIcon /> متى يُستخدم؟</h4>
-                                <p className="text-gray-400 pr-7">{framework.useCase}</p>
+                                <h4 className="font-bold mb-2 flex items-center"><TargetIcon /> {t('modalWhenToUse')}</h4>
+                                <p className="text-gray-400 pr-7">{t(`frameworks.${key}.useCase`)}</p>
                             </div>
 
                             <div className="mt-3 border-t border-gray-600 pt-3">
-                                <h4 className="font-bold mb-2 flex items-center"><LightbulbIcon /> مثال للمنتج/الخدمة</h4>
-                                <p className="text-gray-400 pr-7">{framework.example}</p>
+                                <h4 className="font-bold mb-2 flex items-center"><LightbulbIcon /> {t('modalExample')}</h4>
+                                <p className="text-gray-400 pr-7">{t(`frameworks.${key}.example`)}</p>
                             </div>
                         </div>
                     ))}
