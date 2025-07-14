@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { I18nextProvider } from 'https://esm.sh/react-i18next@^15.0.0';
+import { I18nextProvider } from 'react-i18next';
 import App from './App';
 import i18n from './i18n'; // Import the configured i18n instance
 
