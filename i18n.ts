@@ -23,7 +23,7 @@ const resources = {
       errorApi: "An error occurred while generating the strategy. Check your API key. ({{message}})",
       errorUnexpected: "An unexpected error occurred.",
       suggestedStrategy: "Suggested Strategy:",
-      footer: "Developed by XperTaha for the MBA Community.",
+      footer: "Developed with Gemini for the MBA Community.",
       modalTitle: "Quick Guide to Choosing the Right Copywriting Framework",
       modalClose: "Close",
       modalWhenToUse: "When to use?",
@@ -83,7 +83,7 @@ const resources = {
       errorApi: "Une erreur est survenue lors de la génération de la stratégie. Vérifiez votre clé API. ({{message}})",
       errorUnexpected: "Une erreur inattendue est survenue.",
       suggestedStrategy: "Stratégie Suggérée :",
-      footer: "Développé par XperTaha pour la Communauté MBA.",
+      footer: "Développé avec Gemini pour la Communauté MBA.",
       modalTitle: "Guide Rapide pour Choisir le Bon Framework de Copywriting",
       modalClose: "Fermer",
       modalWhenToUse: "Quand l'utiliser ?",
@@ -143,7 +143,7 @@ const resources = {
       errorApi: "حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك. ({{message}})",
       errorUnexpected: "حدث خطأ غير متوقع.",
       suggestedStrategy: "الاستراتيجية المقترحة:",
-      footer: "تم التطوير من طرف XperTaha لـ MBA Community.",
+      footer: "تم التطوير بمساعدة Gemini لـ MBA Community.",
       modalTitle: "دليل سريع لاختيار إطار عمل كتابة الإعلانات المناسب",
       modalClose: "إغلاق",
       modalWhenToUse: "متى يُستخدم؟",
@@ -185,17 +185,14 @@ const resources = {
 };
 
 i18n
-  .use(initReactI18next); // we only pass the module here
-
-// We check if it's already initialized to avoid re-initializing on hot reloads
-if (!i18n.isInitialized) {
-    i18n.init({
-        resources,
-        lng: 'ar', // default language
-        fallbackLng: 'ar',
-        interpolation: {
-            escapeValue: false, 
-        },
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: 'ar', // default language
+    fallbackLng: 'ar',
+    interpolation: {
+      escapeValue: false, 
+    },
     detection: {
       order: ['htmlTag'],
       caches: [],
