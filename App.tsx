@@ -1,22 +1,47 @@
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FormData } from './types';
 import { generateStrategy } from './services/geminiService';
 import Loader from './components/Loader';
 import MarkdownDisplay from './components/MarkdownDisplay';
 import FrameworkHelpModal from './components/FrameworkHelpModal';
 
+const LanguageSelector: React.FC = () => {
+    const { i18n } = useTranslation();
+    const changeLanguage = (lng: string) => {
+        i18n.changeLanguage(lng);
+    };
+
+    const langButtonClass = (lang: string) => 
+        `px-3 py-1 text-sm rounded-md transition-colors ${i18n.language === lang ? 'bg-blue-600 font-bold text-white' : 'bg-gray-700 hover:bg-gray-600'}`;
+
+    return (
+        <div className="absolute top-4 right-4 flex items-center gap-2 bg-gray-900 p-1 rounded-lg">
+            <button onClick={() => changeLanguage('ar')} className={langButtonClass('ar')}>العربية</button>
+            <button onClick={() => changeLanguage('en')} className={langButtonClass('en')}>English</button>
+            <button onClick={() => changeLanguage('fr')} className={langButtonClass('fr')}>Français</button>
+        </div>
+    );
+}
+
 const App: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const [formData, setFormData] = useState<FormData>({
         productDesc: '',
         targetAudience: '',
         mainMessage: '',
-        copywritingFramework: ''
+        copywritingFramework: '',
+        outputLanguage: 'العربية' // Default output language
     });
     const [strategy, setStrategy] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
+    useEffect(() => {
+        document.documentElement.lang = i18n.language;
+        document.documentElement.dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    }, [i18n.language]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -27,7 +52,7 @@ const App: React.FC = () => {
         e.preventDefault();
         
         if (!formData.productDesc || !formData.targetAudience || !formData.mainMessage) {
-            setError('المرجو ملء جميع الخانات.');
+            setError(t('errorFillFields'));
             return;
         }
 
@@ -36,59 +61,58 @@ const App: React.FC = () => {
         setStrategy('');
 
         try {
-            const result = await generateStrategy(formData.productDesc, formData.targetAudience, formData.mainMessage, formData.copywritingFramework);
+            const result = await generateStrategy(formData.productDesc, formData.targetAudience, formData.mainMessage, formData.copywritingFramework, formData.outputLanguage);
             setStrategy(result);
         } catch (err) {
             if (err instanceof Error) {
-                setError(`حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك. (${err.message})`);
+                setError(t('errorApi', { message: err.message }));
             } else {
-                setError('حدث خطأ غير متوقع.');
+                setError(t('errorUnexpected'));
             }
         } finally {
             setIsLoading(false);
         }
-    }, [formData]);
+    }, [formData, t]);
 
     return (
         <div className="bg-gray-900 text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
-            <main className="container max-w-3xl w-full bg-gray-800 p-8 rounded-xl shadow-2xl shadow-blue-500/10">
-                <header className="text-center mb-8 border-b border-gray-700 pb-6">
-                    <h1 className="text-4xl font-bold text-blue-400">مولد استراتيجيات الإعلان</h1>
-                    <p className="text-gray-400 mt-2 text-lg">
-                        الفكرة عليك، والاستراتيجية علينا. أدخل وصفاً بسيطاً لإعلانك، واحصل على خطة تسويق متكاملة من 5 مراحل، مبنية على خبرة MBA.
-                    </p>
+            <main className="container max-w-3xl w-full bg-gray-800 p-8 rounded-xl shadow-2xl shadow-blue-500/10 relative">
+                <LanguageSelector />
+                <header className="text-center mb-8 border-b border-gray-700 pb-6 pt-10">
+                    <h1 className="text-4xl font-bold text-blue-400">{t('title')}</h1>
+                    <p className="text-gray-400 mt-2 text-lg">{t('subtitle')}</p>
                 </header>
 
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-6">
                         <div className="form-group">
-                            <label htmlFor="productDesc" className="block mb-2 font-bold text-gray-300">1. شنو هو المنتج أو الخدمة ديالك؟</label>
+                            <label htmlFor="productDesc" className="block mb-2 font-bold text-gray-300">{t('productDescLabel')}</label>
                             <textarea
                                 id="productDesc"
                                 rows={3}
-                                placeholder="مثال: خدمة تبديل الدراجات الهوائية القديمة بالجديدة..."
+                                placeholder={t('productDescPlaceholder')}
                                 value={formData.productDesc}
                                 onChange={handleInputChange}
                                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200 placeholder-gray-500"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="targetAudience" className="block mb-2 font-bold text-gray-300">2. شكون هو الجمهور المستهدف الرئيسي؟</label>
+                            <label htmlFor="targetAudience" className="block mb-2 font-bold text-gray-300">{t('targetAudienceLabel')}</label>
                             <textarea
                                 id="targetAudience"
                                 rows={3}
-                                placeholder="مثال: الناس لي عندهم دراجات قديمة وباغيين يجددوها..."
+                                placeholder={t('targetAudiencePlaceholder')}
                                 value={formData.targetAudience}
                                 onChange={handleInputChange}
                                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200 placeholder-gray-500"
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="mainMessage" className="block mb-2 font-bold text-gray-300">3. شنو هي الرسالة الأساسية لي بغيتي توصل؟</label>
+                            <label htmlFor="mainMessage" className="block mb-2 font-bold text-gray-300">{t('mainMessageLabel')}</label>
                             <textarea
                                 id="mainMessage"
                                 rows={3}
-                                placeholder="مثال: يمكنك الاستفادة من دراجتك القديمة للحصول على تخفيض..."
+                                placeholder={t('mainMessagePlaceholder')}
                                 value={formData.mainMessage}
                                 onChange={handleInputChange}
                                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200 placeholder-gray-500"
@@ -96,14 +120,14 @@ const App: React.FC = () => {
                         </div>
                          <div className="form-group">
                             <div className="flex items-center gap-x-2 mb-2">
-                                <label htmlFor="copywritingFramework" className="font-bold text-gray-300">4. اختر إطار عمل الكتابة (اختياري)</label>
+                                <label htmlFor="copywritingFramework" className="font-bold text-gray-300">{t('frameworkLabel')}</label>
                                 <button
                                     type="button"
                                     onClick={() => setIsHelpModalOpen(true)}
                                     className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
-                                    aria-label="مساعدة في اختيار إطار العمل"
+                                    aria-label={t('helpAriaLabel')}
                                 >
-                                    اعرف المزيد
+                                    {t('helpLink')}
                                 </button>
                             </div>
                             <select
@@ -112,13 +136,26 @@ const App: React.FC = () => {
                                 onChange={handleInputChange}
                                 className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200"
                             >
-                                <option value="">بدون إطار محدد</option>
+                                <option value="">{t('noFramework')}</option>
                                 <option value="AIDA">AIDA (Attention, Interest, Desire, Action)</option>
                                 <option value="PAS">PAS (Problem, Agitate, Solve)</option>
                                 <option value="Before-After-Bridge">Before-After-Bridge</option>
                                 <option value="FAB">FAB (Features, Advantages, Benefits)</option>
                                 <option value="4U's">4U's (Useful, Urgent, Unique, Ultra-specific)</option>
                                 <option value="SLAP">SLAP (Stop, Look, Act, Purchase)</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="outputLanguage" className="block mb-2 font-bold text-gray-300">{t('outputLanguageLabel')}</label>
+                             <select
+                                id="outputLanguage"
+                                value={formData.outputLanguage}
+                                onChange={handleInputChange}
+                                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-gray-200"
+                            >
+                                <option value="العربية">العربية</option>
+                                <option value="English">English</option>
+                                <option value="Français">Français</option>
                             </select>
                         </div>
                     </div>
@@ -130,10 +167,10 @@ const App: React.FC = () => {
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span className="mr-3">جاري الإنشاء...</span>
+                                <span className="mr-3">{t('generatingButton')}</span>
                             </>
                         ) : (
-                            <span>أنشئ الاستراتيجية</span>
+                            <span>{t('generateButton')}</span>
                         )}
                     </button>
                 </form>
@@ -143,14 +180,14 @@ const App: React.FC = () => {
                     {error && <div className="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-lg text-center">{error}</div>}
                     {strategy && (
                         <div className="animate-fade-in">
-                            <h2 className="text-2xl font-bold mb-4 text-center">الاستراتيجية المقترحة:</h2>
+                            <h2 className="text-2xl font-bold mb-4 text-center">{t('suggestedStrategy')}</h2>
                             <MarkdownDisplay markdownContent={strategy} />
                         </div>
                     )}
                 </section>
             </main>
             <footer className="text-center mt-6 text-gray-500 text-sm">
-                <p>تم التطوير من طرف  XperTaha لـ MBA Community.</p>
+                <p>{t('footer')}</p>
             </footer>
             
             <FrameworkHelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
