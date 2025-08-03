@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "https://esm.sh/@google/genai@1.9.0";
+import { GoogleGenAI } from "@google/genai";
 
 // The API key MUST be set in the environment variables.
 // The platform should handle injecting `process.env.API_KEY`.
