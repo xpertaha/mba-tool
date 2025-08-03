@@ -1,5 +1,5 @@
-import i18n from 'https://esm.sh/i18next@23.13.0';
-import { initReactI18next } from 'https://esm.sh/react-i18next@15.0.0';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
 const resources = {
   en: {
@@ -13,7 +13,7 @@ const resources = {
       mainMessageLabel: "3. What is the core message you want to convey?",
       mainMessagePlaceholder: "Example: You can use your old bike to get a discount...",
       frameworkLabel: "4. Choose a copywriting framework (optional)",
-      helpLink: "Learn more",
+      helpLink: "(Help?)",
       helpAriaLabel: "Help choosing a framework",
       noFramework: "No specific framework",
       outputLanguageLabel: "5. Strategy Language",
@@ -23,7 +23,7 @@ const resources = {
       errorApi: "An error occurred while generating the strategy. Check your API key. ({{message}})",
       errorUnexpected: "An unexpected error occurred.",
       suggestedStrategy: "Suggested Strategy:",
-      footer: "Developed by XperTaha for the MBA Community.",
+      footer: "Developed with Gemini for the MBA Community.",
       modalTitle: "Quick Guide to Choosing the Right Copywriting Framework",
       modalClose: "Close",
       modalWhenToUse: "When to use?",
@@ -73,7 +73,7 @@ const resources = {
       mainMessageLabel: "3. Quel est le message principal que vous voulez transmettre ?",
       mainMessagePlaceholder: "Exemple : Vous pouvez utiliser votre ancien vélo pour obtenir une réduction...",
       frameworkLabel: "4. Choisissez un framework de copywriting (optionnel)",
-      helpLink: "Plus d'informations",
+      helpLink: "(Aide ?)",
       helpAriaLabel: "Aide pour choisir un framework",
       noFramework: "Sans framework spécifique",
       outputLanguageLabel: "5. Langue de la Stratégie",
@@ -83,7 +83,7 @@ const resources = {
       errorApi: "Une erreur est survenue lors de la génération de la stratégie. Vérifiez votre clé API. ({{message}})",
       errorUnexpected: "Une erreur inattendue est survenue.",
       suggestedStrategy: "Stratégie Suggérée :",
-      footer: "Développé apar XperTaha pour la Communauté MBA.",
+      footer: "Développé avec Gemini pour la Communauté MBA.",
       modalTitle: "Guide Rapide pour Choisir le Bon Framework de Copywriting",
       modalClose: "Fermer",
       modalWhenToUse: "Quand l'utiliser ?",
@@ -133,7 +133,7 @@ const resources = {
       mainMessageLabel: "3. شنو هي الرسالة الأساسية لي بغيتي توصل؟",
       mainMessagePlaceholder: "مثال: يمكنك الاستفادة من دراجتك القديمة للحصول على تخفيض...",
       frameworkLabel: "4. اختر إطار عمل الكتابة (اختياري)",
-      helpLink: "اعرف المزيد",
+      helpLink: "(مساعدة؟)",
       helpAriaLabel: "مساعدة في اختيار إطار العمل",
       noFramework: "بدون إطار محدد",
       outputLanguageLabel: "5. لغة الاستراتيجية",
@@ -143,7 +143,7 @@ const resources = {
       errorApi: "حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك. ({{message}})",
       errorUnexpected: "حدث خطأ غير متوقع.",
       suggestedStrategy: "الاستراتيجية المقترحة:",
-      footer: "تم التطوير من طرف XperTaha لـ MBA Community.",
+      footer: "تم التطوير بمساعدة Gemini لـ MBA Community.",
       modalTitle: "دليل سريع لاختيار إطار عمل كتابة الإعلانات المناسب",
       modalClose: "إغلاق",
       modalWhenToUse: "متى يُستخدم؟",
