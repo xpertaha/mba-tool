@@ -1,5 +1,5 @@
-import React from 'https://esm.sh/react@19.1.0';
-import { useTranslation } from 'https://esm.sh/react-i18next@15.0.0';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const TargetIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 inline-block ml-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
