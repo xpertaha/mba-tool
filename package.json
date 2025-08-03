@@ -1,5 +1,5 @@
 {
-  "name": "مولد-استراتيجيات-الإعلان-(ad-strategy-generator)-v1",
+  "name": "multilangue-(ad-strategy-generator)-v2-frame-work-pop-up",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,11 +11,13 @@
   "dependencies": {
     "react-dom": "^19.1.0",
     "react": "^19.1.0",
-    "@google/genai": "^1.9.0"
+    "@google/genai": "^1.9.0",
+    "react-i18next": "^15.0.0",
+    "i18next": "^23.13.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "typescript": "~5.7.2",
+    "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
 }
