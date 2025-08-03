@@ -83,7 +83,7 @@ const resources = {
       errorApi: "Une erreur est survenue lors de la génération de la stratégie. Vérifiez votre clé API. ({{message}})",
       errorUnexpected: "Une erreur inattendue est survenue.",
       suggestedStrategy: "Stratégie Suggérée :",
-      footer: "Développé avec Gemini pour la Communauté MBA.",
+      footer: "xpertaha pour la Communauté MBA.",
       modalTitle: "Guide Rapide pour Choisir le Bon Framework de Copywriting",
       modalClose: "Fermer",
       modalWhenToUse: "Quand l'utiliser ?",
