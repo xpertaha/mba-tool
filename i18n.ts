@@ -197,7 +197,7 @@ const resources = {
       errorApi: "حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك. ({{message}})",
       errorUnexpected: "حدث خطأ غير متوقع.",
       suggestedStrategy: "الاستراتيجية المقترحة:",
-      footer: "تم التطوير  XperTaha لـ MBA Community.",
+      footer: " تم التطوير من طرف  XperTaha لـ MBA Community.",
       modalTitle: "دليل سريع لاختيار إطار عمل كتابة الإعلانات المناسب",
       modalClose: "إغلاق",
       modalWhenToUse: "متى يُستخدم؟",
