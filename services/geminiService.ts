@@ -114,7 +114,7 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     ${frameworkInstructions}
     ` : `
     **STRATEGY GUIDANCE:**
-    Even without a specific framework, generate a creative and coherent strategy across the funnel stages. Ensure the messaging evolves logically from introducing the product to encouraging purchase and loyalty, while adhering to all creative rules.
+    Even without a specific framework, generate a creative and coherent strategy across the funnel stages. Ensure the messaging evolves logically from introducing the product to encouraging purchase and loyalty, whileadhering to all creative rules.
     `}
     ---
 
@@ -176,6 +176,50 @@ const getPageContent = async (url: string): Promise<string> => {
              throw new Error("CORS_ERROR");
         }
         throw new Error("Could not fetch content from the provided URL. Please check the link and try again.");
+    }
+};
+
+export const analyzeImageAndExtractDetails = async (base64Image: string, mimeType: string): Promise<{ productDesc: string; targetAudience: string; mainMessage: string; }> => {
+    try {
+        const imagePart = {
+            inlineData: {
+                mimeType: mimeType,
+                data: base64Image,
+            },
+        };
+        
+        const prompt = `You are an expert ad analyst. Look at this advertisement image. Based ONLY on the visual information and any text visible in the image, your task is to extract and provide the following three pieces of information, separated by '|||':
+
+        1. A brief, neutral description of the product or service being advertised.
+        2. A description of the likely target audience for this ad.
+        3. The core marketing message or offer presented in the ad.`;
+
+        const textPart = { text: prompt };
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: { parts: [imagePart, textPart] },
+        });
+
+        const text = response.text;
+        const parts = text.split('|||').map(part => part.trim().replace(/^\d+\.\s*/, '')); // Split by separator and clean up numbering
+
+        if (parts.length < 3) {
+            console.error("Gemini response did not contain the expected '|||' separator or had too few parts.", text);
+            throw new Error("AI could not extract all necessary details from the image. Please try a clearer image.");
+        }
+
+        return {
+            productDesc: parts[0] || "Could not determine.",
+            targetAudience: parts[1] || "Could not determine.",
+            mainMessage: parts[2] || "Could not determine.",
+        };
+    } catch (error) {
+        console.error("Error analyzing image with Gemini:", error);
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+        throw new Error("An unknown error occurred while analyzing the image.");
     }
 };
 
@@ -251,66 +295,4 @@ export const analyzeUrlAndGenerateStrategy = async (url: string, outputLanguage:
 
     // Step 3: Generate the final strategy using the gathered data
     return await generateStrategy(productDesc, targetAudience, mainMessage, framework, outputLanguage);
-};
-
-// Converts a File object to a base64 string
-const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-        // The result is "data:image/jpeg;base64,LzlqLzRBQ...".
-        // We only need the part after the comma.
-        const result = reader.result as string;
-        resolve(result.split(',')[1]);
-    };
-    reader.onerror = error => reject(error);
-});
-
-
-export const extractDetailsFromImage = async (imageFile: File): Promise<{ productDesc: string; targetAudience: string; mainMessage: string; }> => {
-    
-    const imageAnalysisPrompt = `You are an expert ad analyst. Look at this advertisement image. Based ONLY on the visual information and any text visible in the image, your task is to extract and provide the following three pieces of information, separated by '|||':
-
-1. A brief, neutral description of the product or service being advertised.
-2. A description of the likely target audience for this ad.
-3. The core marketing message or offer presented in the ad.`;
-
-    try {
-        const base64Data = await toBase64(imageFile);
-        
-        const imagePart = {
-            inlineData: {
-                mimeType: imageFile.type,
-                data: base64Data,
-            },
-        };
-
-        const textPart = { text: imageAnalysisPrompt };
-
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: { parts: [textPart, imagePart] },
-        });
-
-        const text = response.text.trim();
-        const parts = text.split('|||');
-
-        if (parts.length < 3) {
-            console.error("Gemini response was not in the expected format:", text);
-            throw new Error("AI failed to extract all required details from the image. The response format was incorrect.");
-        }
-
-        return {
-            productDesc: parts[0].trim(),
-            targetAudience: parts[1].trim(),
-            mainMessage: parts[2].trim(),
-        };
-
-    } catch (error) {
-        console.error("Error extracting details from image:", error);
-        if (error instanceof Error) {
-            throw error;
-        }
-        throw new Error("An unknown error occurred during image analysis.");
-    }
 };
