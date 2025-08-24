@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 
 // The API key MUST be set in the environment variables.
 // The platform should handle injecting `process.env.API_KEY`.
@@ -140,5 +140,177 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
             throw new Error(error.message);
         }
         throw new Error("An unknown error occurred while generating the strategy.");
+    }
+};
+
+const getPageContent = async (url: string): Promise<string> => {
+    try {
+        // IMPORTANT: In a standard browser environment, this fetch request to a third-party
+        // URL will likely be blocked by the Cross-Origin Resource Sharing (CORS) policy
+        // for security reasons. This code assumes it is running in an environment where
+        // CORS is not an issue, such as a server-side context or a browser with specific
+        // configurations or extensions that allow cross-origin requests. A common solution
+        // is to use a server-side proxy to fetch the content.
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // Try to find the main content, fallback to the whole body.
+        // This is a simple heuristic to reduce noise from headers, footers, etc.
+        const mainContent = doc.querySelector('main')?.textContent;
+        const articleContent = doc.querySelector('article')?.textContent;
+        
+        // Prioritize more specific content containers
+        const textContent = mainContent || articleContent || doc.body.textContent || "";
+        
+        // Clean up whitespace and limit the length to avoid exceeding API limits.
+        return textContent.replace(/\s\s+/g, ' ').trim().slice(0, 15000);
+    } catch (error) {
+        console.error("Failed to fetch or parse URL content:", error);
+        // A TypeError with this message in a browser context is almost always a CORS issue.
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+             throw new Error("CORS_ERROR");
+        }
+        throw new Error("Could not fetch content from the provided URL. Please check the link and try again.");
+    }
+};
+
+export const analyzeUrlAndGenerateStrategy = async (url: string, outputLanguage: string): Promise<string> => {
+    const pageContent = await getPageContent(url);
+    if (!pageContent) {
+        throw new Error("Could not extract any text content from the URL.");
+    }
+
+    // Step 1: Summarize content into structured data
+    const summarizerPrompt = `
+    You are an expert at analyzing scraped webpage content. The following text is from a product page, but it may contain a lot of extra "noise" like navigation links, footers, unrelated product recommendations, and cookie banners. 
+    Your task is to intelligently identify and focus ONLY on the single, main product being sold on the page. Ignore all other content.
+    Based on your analysis of the main product, provide: 
+    1. A brief, compelling description of the product/service.
+    2. A detailed description of the most likely target audience.
+    3. The single, most powerful core marketing message of the page.
+    The response must be in JSON format.
+    
+    Content: "${pageContent}"`;
+
+    const summarizerResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: summarizerPrompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                    productDesc: { type: Type.STRING, description: "A brief, compelling description of the product or service." },
+                    targetAudience: { type: Type.STRING, description: "A detailed description of the most likely target audience." },
+                    mainMessage: { type: Type.STRING, description: "The single, most powerful core marketing message of the page." },
+                },
+                required: ["productDesc", "targetAudience", "mainMessage"]
+            }
+        }
+    });
+    
+    let summaryJson;
+    try {
+        summaryJson = JSON.parse(summarizerResponse.text);
+    } catch (e) {
+        console.error("Failed to parse JSON from summarizer:", summarizerResponse.text);
+        throw new Error("AI failed to return valid structured data from the URL. The page might be too complex or the content could not be understood.");
+    }
+
+    const { productDesc, targetAudience, mainMessage } = summaryJson;
+
+    if (!productDesc || !targetAudience || !mainMessage) {
+        throw new Error("AI could not extract all necessary details (description, audience, message) from the URL.");
+    }
+
+    // Step 2: Select the best framework
+    const frameworkSelectorPrompt = `Based on the following product description, which of these copywriting frameworks (AIDA, PAS, FAB, Before-After-Bridge, 4U's, SLAP) is the most suitable for creating an ad campaign? Respond with only the name of the framework. Description: "${productDesc}"`;
+
+    const frameworkSelectorResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: frameworkSelectorPrompt,
+    });
+
+    let framework = frameworkSelectorResponse.text.trim().replace(/[."]/g, ''); // Clean up potential trailing characters
+    const validFrameworks = ['AIDA', 'PAS', 'Before-After-Bridge', 'FAB', "4U's", 'SLAP'];
+    
+    // Find a valid framework within the response string
+    const foundFramework = validFrameworks.find(f => framework.includes(f));
+    
+    if (!foundFramework) {
+        console.warn(`Gemini suggested an invalid or no framework ('${framework}'). Proceeding without one.`);
+        framework = '';
+    } else {
+        framework = foundFramework; // Use the matched valid framework name
+    }
+
+    // Step 3: Generate the final strategy using the gathered data
+    return await generateStrategy(productDesc, targetAudience, mainMessage, framework, outputLanguage);
+};
+
+// Converts a File object to a base64 string
+const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        // The result is "data:image/jpeg;base64,LzlqLzRBQ...".
+        // We only need the part after the comma.
+        const result = reader.result as string;
+        resolve(result.split(',')[1]);
+    };
+    reader.onerror = error => reject(error);
+});
+
+
+export const extractDetailsFromImage = async (imageFile: File): Promise<{ productDesc: string; targetAudience: string; mainMessage: string; }> => {
+    
+    const imageAnalysisPrompt = `You are an expert ad analyst. Look at this advertisement image. Based ONLY on the visual information and any text visible in the image, your task is to extract and provide the following three pieces of information, separated by '|||':
+
+1. A brief, neutral description of the product or service being advertised.
+2. A description of the likely target audience for this ad.
+3. The core marketing message or offer presented in the ad.`;
+
+    try {
+        const base64Data = await toBase64(imageFile);
+        
+        const imagePart = {
+            inlineData: {
+                mimeType: imageFile.type,
+                data: base64Data,
+            },
+        };
+
+        const textPart = { text: imageAnalysisPrompt };
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: { parts: [textPart, imagePart] },
+        });
+
+        const text = response.text.trim();
+        const parts = text.split('|||');
+
+        if (parts.length < 3) {
+            console.error("Gemini response was not in the expected format:", text);
+            throw new Error("AI failed to extract all required details from the image. The response format was incorrect.");
+        }
+
+        return {
+            productDesc: parts[0].trim(),
+            targetAudience: parts[1].trim(),
+            mainMessage: parts[2].trim(),
+        };
+
+    } catch (error) {
+        console.error("Error extracting details from image:", error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("An unknown error occurred during image analysis.");
     }
 };
