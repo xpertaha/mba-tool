@@ -1,14 +1,30 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-// The API key MUST be set in the environment variables.
-// The platform should handle injecting `process.env.API_KEY`.
-if (!process.env.API_KEY) {
-    // This provides a clear error message in the developer console
-    // if the API key is not configured, aiding in debugging.
-    console.error("API_KEY environment variable not set. Please configure it in your environment.");
-}
+// Singleton instance holder
+let aiInstance: GoogleGenAI | null = null;
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+/**
+ * Lazily initializes and returns a singleton instance of the GoogleGenAI client.
+ * This prevents the SDK from being instantiated at build time, which could
+ * cause issues in environments where environment variables are not yet available.
+ * @returns {GoogleGenAI} The initialized GoogleGenAI instance.
+ * @throws {Error} If the API_KEY environment variable is not set.
+ */
+const getAiInstance = (): GoogleGenAI => {
+    if (!aiInstance) {
+        const apiKey = process.env.API_KEY;
+        if (!apiKey) {
+            // This provides a clear error message in the developer console
+            // if the API key is not configured, aiding in debugging.
+            console.error("API_KEY environment variable not set. Please configure it in your environment.");
+            // Throw an error that can be caught by the UI to display a user-friendly message.
+            throw new Error("The API_KEY is missing. Please ensure it is configured correctly.");
+        }
+        aiInstance = new GoogleGenAI({ apiKey });
+    }
+    return aiInstance;
+};
+
 
 const getFrameworkInstructions = (framework: string): string => {
     if (!framework || framework === 'بدون إطار محدد') return '';
@@ -128,6 +144,7 @@ export const generateStrategy = async (productDesc: string, targetAudience: stri
     `;
 
     try {
+        const ai = getAiInstance();
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: masterPrompt,
@@ -181,6 +198,7 @@ const getPageContent = async (url: string): Promise<string> => {
 
 export const analyzeImageAndExtractDetails = async (base64Image: string, mimeType: string): Promise<{ productDesc: string; targetAudience: string; mainMessage: string; }> => {
     try {
+        const ai = getAiInstance();
         const imagePart = {
             inlineData: {
                 mimeType: mimeType,
@@ -241,6 +259,7 @@ export const analyzeUrlAndGenerateStrategy = async (url: string, outputLanguage:
     
     Content: "${pageContent}"`;
 
+    const ai = getAiInstance();
     const summarizerResponse = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: summarizerPrompt,
