@@ -29,26 +29,31 @@ const resources = {
       modalWhenToUse: "When to use?",
       modalExample: "Product/Service Example",
 
-      // Redesign keys
-      analyzeWithImage: "Analyze by Image",
-      analyzeWithImageDesc: "Upload an ad image and let AI extract the details for you.",
-      uploadImagePrompt: "Click to upload or drag & drop",
+      // Redesigned homepage keys
+      analyzeWithImage: "Analyze with an Image",
+      analyzeWithImageDesc: "Upload an ad image to get started instantly.",
+      uploadImage: "Upload Image",
+      dragDropPrompt: "or drag & drop",
+      analyzeImageButton: "Analyze Image",
+      
       analyzeWithLink: "Analyze with a Link",
       analyzeWithLinkDesc: "Just paste a product URL and let AI do the work.",
       urlPlaceholder: "Paste product URL here...",
-      analyzeButton: "Analyze Link",
+      analyzeLinkButton: "Analyze Link",
+
       manualEntry: "Manual Entry",
       manualEntryDesc: "Enter your product details yourself for a custom strategy.",
       manualEntryButton: "Start Now",
-      backToHome: "Back to Home",
+      
+      switchToManual: "Or, enter details manually",
+      switchToLink: "Analyze a URL instead",
+
       loadingAnalysis: "Analyzing URL, extracting data, and building strategy...",
-      loadingImageAnalysis: "Analyzing image, please wait...",
+      loadingImageAnalysis: "Analyzing image and extracting details...",
+      analyzedImageTitle: "Image for Analysis:",
+
       errorFetch: "Failed to fetch content from the link. Please ensure the URL is correct and publicly accessible.",
       errorCors: "Could not analyze the link due to browser security restrictions (CORS). This often happens with major sites like AliExpress or Temu. Please try the manual entry method instead.",
-      errorInvalidImage: "Please upload a valid image file.",
-      analyzedImage: "Analyzed Image:",
-      uploadedAdAlt: "Uploaded ad for analysis",
-
 
       frameworks: {
         aida: {
@@ -111,25 +116,31 @@ const resources = {
       modalWhenToUse: "Quand l'utiliser ?",
       modalExample: "Exemple de Produit/Service",
       
-      // Redesign keys
-      analyzeWithImage: "Analyser par Image",
-      analyzeWithImageDesc: "Téléchargez une image publicitaire et laissez l'IA extraire les détails.",
-      uploadImagePrompt: "Cliquez pour télécharger ou glissez-déposez",
+      // Redesigned homepage keys
+      analyzeWithImage: "Analyser avec une Image",
+      analyzeWithImageDesc: "Téléchargez une image publicitaire pour commencer instantanément.",
+      uploadImage: "Télécharger une image",
+      dragDropPrompt: "ou glisser-déposer",
+      analyzeImageButton: "Analyser l'image",
+
       analyzeWithLink: "Analyser avec un lien",
       analyzeWithLinkDesc: "Collez simplement l'URL d'un produit et laissez l'IA faire le travail.",
       urlPlaceholder: "Collez l'URL du produit ici...",
-      analyzeButton: "Analyser le lien",
+      analyzeLinkButton: "Analyser le lien",
+      
       manualEntry: "Saisie manuelle",
       manualEntryDesc: "Entrez vous-même les détails de votre produit pour une stratégie personnalisée.",
       manualEntryButton: "Commencer",
-      backToHome: "Retour à l'accueil",
+
+      switchToManual: "Ou, entrez les détails manuellement",
+      switchToLink: "Analyser une URL à la place",
+      
       loadingAnalysis: "Analyse de l'URL, extraction des données et élaboration de la stratégie...",
-      loadingImageAnalysis: "Analyse de l'image en cours...",
+      loadingImageAnalysis: "Analyse de l'image et extraction des détails...",
+      analyzedImageTitle: "Image pour analyse :",
+
       errorFetch: "Échec de la récupération du contenu du lien. Veuillez vous assurer que l'URL est correcte et publiquement accessible.",
       errorCors: "Impossible d'analyser le lien à cause des restrictions de sécurité du navigateur (CORS). Cela arrive souvent avec les grands sites comme AliExpress ou Temu. Veuillez essayer la saisie manuelle.",
-      errorInvalidImage: "Veuillez télécharger un fichier image valide.",
-      analyzedImage: "Image analysée :",
-      uploadedAdAlt: "Publicité téléchargée pour analyse",
 
       frameworks: {
         aida: {
@@ -192,25 +203,31 @@ const resources = {
       modalWhenToUse: "متى يُستخدم؟",
       modalExample: "مثال للمنتج/الخدمة",
 
-      // Redesign keys
+      // Redesigned homepage keys
       analyzeWithImage: "أنشئ استراتيجية بصورة",
-      analyzeWithImageDesc: "حمّل صورة إعلان ودع الذكاء الاصطناعي يستخرج لك التفاصيل.",
-      uploadImagePrompt: "انقر للتحميل أو اسحب وأفلت",
+      analyzeWithImageDesc: "ارفع صورة إعلان لتبدأ فوراً.",
+      uploadImage: "اختر صورة",
+      dragDropPrompt: "أو اسحبها وأفلتها هنا",
+      analyzeImageButton: "حلل الصورة",
+      
       analyzeWithLink: "أنشئ استراتيجية عبر رابط",
       analyzeWithLinkDesc: "فقط الصق رابط المنتج ودع الذكاء الاصطناعي يقوم بالباقي.",
       urlPlaceholder: "الصق رابط المنتج هنا...",
-      analyzeButton: "حلل الرابط",
+      analyzeLinkButton: "حلل الرابط",
+      
       manualEntry: "أنشئ استراتيجية يدوياً",
       manualEntryDesc: "أدخل تفاصيل منتجك بنفسك للحصول على استراتيجية مخصصة.",
       manualEntryButton: "ابدأ الآن",
-      backToHome: "العودة للرئيسية",
+
+      switchToManual: "أو، أدخل التفاصيل يدوياً",
+      switchToLink: "أو، قم بتحليل رابط بدلاً من ذلك",
+
       loadingAnalysis: "جاري تحليل الرابط واستخراج البيانات وبناء الاستراتيجية...",
-      loadingImageAnalysis: "جاري تحليل الصورة، الرجاء الانتظار...",
+      loadingImageAnalysis: "جاري تحليل الصورة واستخراج التفاصيل...",
+      analyzedImageTitle: "الصورة قيد التحليل:",
+
       errorFetch: "فشل في جلب محتوى الرابط. تأكد من صحة الرابط وأن الصفحة متاحة للعموم.",
       errorCors: "تعذر تحليل الرابط بسبب قيود أمان المتصفح (CORS). يحدث هذا غالبًا مع المواقع الكبرى مثل AliExpress أو Temu. الرجاء تجربة طريقة الإدخال اليدوي بدلاً من ذلك.",
-      errorInvalidImage: "الرجاء تحميل ملف صورة صالح.",
-      analyzedImage: "الصورة التي تم تحليلها:",
-      uploadedAdAlt: "صورة الإعلان المرفوعة للتحليل",
 
       frameworks: {
         aida: {
