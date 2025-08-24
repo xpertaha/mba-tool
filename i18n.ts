@@ -23,7 +23,7 @@ const resources = {
       errorApi: "An error occurred while generating the strategy. Check your API key. ({{message}})",
       errorUnexpected: "An unexpected error occurred.",
       suggestedStrategy: "Suggested Strategy:",
-      footer: "Developed with Gemini for the MBA Community.",
+      footer: "Developed by XperTaha for the MBA Community.",
       modalTitle: "Quick Guide to Choosing the Right Copywriting Framework",
       modalClose: "Close",
       modalWhenToUse: "When to use?",
@@ -37,7 +37,7 @@ const resources = {
       analyzeImageButton: "Analyze Image",
       
       analyzeWithLink: "Analyze with a Link",
-      analyzeWithLinkDesc: "Just paste a product URL and let AI do the work.",
+      analyzeWithLinkDesc: "Just paste a product URL and let US do the work.",
       urlPlaceholder: "Paste product URL here...",
       analyzeLinkButton: "Analyze Link",
 
@@ -110,7 +110,7 @@ const resources = {
       errorApi: "Une erreur est survenue lors de la génération de la stratégie. Vérifiez votre clé API. ({{message}})",
       errorUnexpected: "Une erreur inattendue est survenue.",
       suggestedStrategy: "Stratégie Suggérée :",
-      footer: "Développé avec Gemini pour la Communauté MBA.",
+      footer: "Développé par XperTaha pour la Communauté MBA.",
       modalTitle: "Guide Rapide pour Choisir le Bon Framework de Copywriting",
       modalClose: "Fermer",
       modalWhenToUse: "Quand l'utiliser ?",
@@ -124,7 +124,7 @@ const resources = {
       analyzeImageButton: "Analyser l'image",
 
       analyzeWithLink: "Analyser avec un lien",
-      analyzeWithLinkDesc: "Collez simplement l'URL d'un produit et laissez l'IA faire le travail.",
+      analyzeWithLinkDesc: "Collez simplement l'URL d'un produit et laissez nous faire le travail.",
       urlPlaceholder: "Collez l'URL du produit ici...",
       analyzeLinkButton: "Analyser le lien",
       
@@ -197,7 +197,7 @@ const resources = {
       errorApi: "حدث خطأ أثناء إنشاء الاستراتيجية. تأكد من صحة مفتاح API الخاص بك. ({{message}})",
       errorUnexpected: "حدث خطأ غير متوقع.",
       suggestedStrategy: "الاستراتيجية المقترحة:",
-      footer: "تم التطوير بمساعدة Gemini لـ MBA Community.",
+      footer: "تم التطوير  XperTaha لـ MBA Community.",
       modalTitle: "دليل سريع لاختيار إطار عمل كتابة الإعلانات المناسب",
       modalClose: "إغلاق",
       modalWhenToUse: "متى يُستخدم؟",
@@ -211,7 +211,7 @@ const resources = {
       analyzeImageButton: "حلل الصورة",
       
       analyzeWithLink: "أنشئ استراتيجية عبر رابط",
-      analyzeWithLinkDesc: "فقط الصق رابط المنتج ودع الذكاء الاصطناعي يقوم بالباقي.",
+      analyzeWithLinkDesc: "فقط الصق رابط المنتج ودعنا نقوم بالباقي.",
       urlPlaceholder: "الصق رابط المنتج هنا...",
       analyzeLinkButton: "حلل الرابط",
       
